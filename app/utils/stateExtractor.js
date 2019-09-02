@@ -1,8 +1,7 @@
 const ip = require("ip");
-const localIpAddress = ip.address();
 const log = require("loglevel");
 
-const extractState = (tasks = [], targetWorkerIds = []) => {
+const extractState = (localIpAddress = "localhost", tasks = [], targetWorkerIds = []) => {
     log.trace(`Current IP: ${localIpAddress}, TargetWorkerIds: ${JSON.stringify(targetWorkerIds)}`);
     const state = tasks
         .filter(({ worker_id, state, id }) => {

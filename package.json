@@ -9,9 +9,13 @@
         "loglevel": "^1.6.3",
         "superagent": "^5.1.0"
     },
-    "devDependencies": {},
+    "devDependencies": {
+        "chai": "^4.2.0",
+        "mocha": "^6.2.0"
+    },
     "scripts": {
-        "start": "node index.js"
+        "start": "node index.js",
+        "test": "mocha --reporter spec test/**/*.test.js"
     },
     "repository": {
         "type": "git",
