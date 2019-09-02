@@ -4,7 +4,7 @@ const healthcheckRouter = express.Router();
 const log = require("loglevel");
 
 healthcheckRouter.get("/healthcheck/:connector", checkHealth, (request, response) => {
-    const { status, failures } = request.healthcheck;
+    const { status, failures = [] } = request.healthcheck;
     const responseMessage = failures.length ? `Failures: ${JSON.stringify(failures)}` : "OK";
     log.info(
         `/healthcheck/:${
