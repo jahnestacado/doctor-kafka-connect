@@ -1,0 +1,28 @@
+{
+    "name": "kafka-connect-healthcheck",
+    "version": "1.0.0",
+    "description": "A healthcheck service for Kafka Connect",
+    "main": "index.js",
+    "dependencies": {
+        "express": "^4.17.1",
+        "ip": "^1.1.5",
+        "superagent": "^5.1.0"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "start": "node index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/jahnestacado/kafka-connect-healthcheck.git"
+    },
+    "keywords": [
+        "kafka"
+    ],
+    "author": "Jahn Estacado",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/jahnestacado/kafka-connect-healthcheck/issues"
+    },
+    "homepage": "https://github.com/jahnestacado/kafka-connect-healthcheck#readme"
+}
