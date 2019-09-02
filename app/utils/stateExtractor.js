@@ -1,4 +1,3 @@
-const ip = require("ip");
 const log = require("loglevel");
 
 const extractState = (localIpAddress = "localhost", tasks = [], targetWorkerIds = []) => {
