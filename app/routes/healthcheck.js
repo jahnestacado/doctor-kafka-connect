@@ -1,5 +1,5 @@
 const express = require("express");
-const checkHealth = require("./../middlewares/checkHealth.js");
+const checkHealth = require("./../middlewares/kafkaConnectProxy.js");
 const healthcheckRouter = express.Router();
 const log = require("loglevel");
 

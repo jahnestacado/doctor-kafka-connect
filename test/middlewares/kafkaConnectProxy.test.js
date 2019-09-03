@@ -1,5 +1,5 @@
 const nock = require("nock");
-const checkHealth = require("./../../app/middlewares/checkHealth.js");
+const checkHealth = require("./../../app/middlewares/kafkaConnectProxy.js");
 const chai = require("chai");
 const expect = chai.expect;
 
