@@ -1,15 +1,19 @@
 const log = require("loglevel");
 
-const extractState = (localIpAddress = "localhost", tasks = [], targetWorkerIds = []) => {
-    log.trace(`Current IP: ${localIpAddress}, TargetWorkerIds: ${JSON.stringify(targetWorkerIds)}`);
+const extractState = (publicIpAddress = "localhost", tasks = [], targetWorkerIds = []) => {
+    log.trace(
+        `Current IP: ${publicIpAddress}, TargetWorkerIds: ${JSON.stringify(targetWorkerIds)}`
+    );
     const state = tasks
         .filter(({ worker_id, state, id }) => {
-            const worker = worker_id.split(":")[0] || "";
+            const workerHostname = worker_id.split(":")[0] || "";
             log.debug(`Checking task {id: ${id}, worker_id: ${worker_id}, state: ${state}}`);
-            return (
-                (targetWorkerIds.includes(worker_id) || worker === localIpAddress) &&
-                state === "FAILED"
-            );
+
+            const isTaskFailing =
+                (targetWorkerIds.includes(worker_id) || workerHostname === publicIpAddress) &&
+                state === "FAILED";
+
+            return isTaskFailing;
         })
         .reduce(
             (res, { worker_id, id }) => {

@@ -1,11 +1,13 @@
 const nock = require("nock");
-const testWorkerId = "test-worker-id:9090";
-process.env.KAFKA_CONNECT_TARGET_WORKER_IDS = testWorkerId;
 const checkHealth = require("./../../app/middlewares/checkHealth.js");
 const chai = require("chai");
 const expect = chai.expect;
 
 describe("when hitting the checkHealth middleware", () => {
+    const testWorkerId = "test-worker-id:9090";
+    beforeEach(() => {
+        process.env.KAFKA_CONNECT_TARGET_WORKER_IDS = testWorkerId;
+    });
     describe("and the Kafka Connect Endpoint returns a 200 response", () => {
         const connector = "foo-0-connector";
         const request = { params: { connector } };
