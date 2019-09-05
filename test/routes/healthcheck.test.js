@@ -35,8 +35,8 @@ describe("when testing the healthcheck route (integration-like tests)", () => {
             response = await request(app).get(`/healthcheck/${connector}`);
         });
 
-        it("should return a 500 status", () => {
-            expect(response.status).to.equal(500);
+        it("should return a 503 status", () => {
+            expect(response.status).to.equal(503);
         });
 
         it("should return a body with the expected failure message", () => {

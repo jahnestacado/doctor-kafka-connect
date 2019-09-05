@@ -10,7 +10,7 @@ log.setDefaultLevel(logLevel);
 
 app.use(healthcheckRouter);
 app.listen(healthcheckPort, () => {
-    log.info(`Starting Kafka Connect Healthcheck server on port: ${healthcheckPort}`);
+    log.info(`Starting Doctor Kafka Connect server on port: ${healthcheckPort}`);
 });
 
 app.use(handleError);

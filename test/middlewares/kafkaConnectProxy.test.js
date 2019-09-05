@@ -3,7 +3,7 @@ const checkHealth = require("./../../app/middlewares/kafkaConnectProxy.js");
 const chai = require("chai");
 const expect = chai.expect;
 
-describe("when hitting the checkHealth middleware", () => {
+describe("when hitting the kafkaConnectProxy middleware", () => {
     const testWorkerId = "test-worker-id:9090";
     beforeEach(() => {
         process.env.KAFKA_CONNECT_TARGET_WORKER_IDS = testWorkerId;
@@ -12,7 +12,7 @@ describe("when hitting the checkHealth middleware", () => {
         const connector = "foo-0-connector";
         const request = { params: { connector } };
         const expectHealthcheckResult = {
-            status: 500,
+            status: 503,
             failures: [{ workerId: "test-worker-id:9090", taskId: 0 }],
         };
         beforeEach(() => {
@@ -42,7 +42,7 @@ describe("when hitting the checkHealth middleware", () => {
         beforeEach(() => {
             nock("http://localhost:8083")
                 .get(`/connectors/${connector}/status`)
-                .reply(500, {});
+                .reply(503, {});
         });
         beforeEach((done) => {
             checkHealth(request, {}, (err) => {
@@ -52,7 +52,7 @@ describe("when hitting the checkHealth middleware", () => {
         });
 
         it("should call the next function with an error", () => {
-            expect(error.status).to.equal(500);
+            expect(error.status).to.equal(503);
         });
     });
 });

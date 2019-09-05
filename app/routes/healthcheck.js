@@ -5,8 +5,6 @@ const log = require("loglevel");
 
 healthcheckRouter.get("/healthcheck/:connector", checkHealth, (request, response) => {
     const { status, failures = [] } = request.healthcheck;
-
-    console.log("Result", status, failures);
     const responseMessage = failures.length ? `Failures: ${JSON.stringify(failures)}` : "OK";
     const connectorName = request.params.connector;
     log.info(`/healthcheck/:${connectorName}" ->  status: ${status} message: ${responseMessage}`);

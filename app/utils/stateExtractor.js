@@ -17,7 +17,7 @@ const extractState = (publicIpAddress = "localhost", tasks = [], targetWorkerIds
         })
         .reduce(
             (res, { worker_id, id }) => {
-                res.status = 500;
+                res.status = 503;
                 res.failures.push({ workerId: worker_id, taskId: id });
                 return res;
             },

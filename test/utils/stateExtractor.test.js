@@ -38,14 +38,14 @@ describe("when calling the extractState function", () => {
         ];
         const hostIP = "127.0.0.1";
         const expectedState = {
-            status: 500,
+            status: 503,
             failures: [{ taskId: 2, workerId: "buzz:3333" }],
         };
         beforeEach(() => {
             state = extractState(hostIP, tasks, targetWorkerIds);
         });
 
-        it("should return a 500 status code with the expected failure", () => {
+        it("should return a 503 status code with the expected failure", () => {
             expect(state).to.deep.equal(expectedState);
         });
     });
@@ -58,7 +58,7 @@ describe("when calling the extractState function", () => {
             { id: 2, worker_id: "128.222.333.12:3333", state: "FAILED" },
         ];
         const expectedState = {
-            status: 500,
+            status: 503,
             failures: [
                 { taskId: 0, workerId: `${hostIP}:8900` },
                 { taskId: 1, workerId: `${hostIP}:8901` },
@@ -68,7 +68,7 @@ describe("when calling the extractState function", () => {
             state = extractState(hostIP, tasks);
         });
 
-        it("should return a 500 status code with the expected failures", () => {
+        it("should return a 503 status code with the expected failures", () => {
             expect(state).to.deep.equal(expectedState);
         });
     });

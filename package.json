@@ -1,5 +1,5 @@
 {
-    "name": "kafka-connect-healthcheck",
+    "name": "doctor-kafka-connect",
     "version": "1.0.0",
     "description": "A healthcheck service for Kafka Connect",
     "main": "index.js",
