@@ -1,3 +1,8 @@
+/**
+ * redux-tattoo <https://github.com/jahnestacado/doctor-kafka-connect>
+ * Copyright (c) 2019 Ioannis Tzanellis
+ * Licensed under the MIT License (MIT).
+ */
 const express = require("express");
 const createCheckConnectorsHealth = require("./../middlewares/connectorHealth.js");
 const createCheckWorkersHealth = require("./../middlewares/workerHealth.js");

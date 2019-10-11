@@ -1,3 +1,8 @@
+/**
+ * redux-tattoo <https://github.com/jahnestacado/doctor-kafka-connect>
+ * Copyright (c) 2019 Ioannis Tzanellis
+ * Licensed under the MIT License (MIT).
+ */
 const stateExtractor = require("./../../app/utils/stateExtractor.js");
 const chai = require("chai");
 const expect = chai.expect;
