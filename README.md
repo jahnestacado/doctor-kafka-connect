@@ -91,8 +91,8 @@ Status 503
 ```json
 {
     "failures": [
-      { "connector":"connector-1", taskId": 0, "workerId": "kafka-connect-worker-0:8083", trace: "the stack trace..." },
-      { "connector":"connector-2", taskId": 3, "workerId": "kafka-connect-worker-0:8083", trace: "the stack trace..." },
+      { "connector":"connector-1", "taskId": 0, "workerId": "kafka-connect-worker-0:8083", "trace": "the stack trace..." },
+      { "connector":"connector-2", "taskId": 3, "workerId": "kafka-connect-worker-0:8083", "trace": "the stack trace..." },
       ...
     ]
 }
@@ -130,7 +130,7 @@ Status 503
 ```json
 {
     "failures": [
-      { "connector":"connector-name", taskId": 0, "workerId": "kafka-connect-worker-0:8083", trace: "the stack trace..." },
+      { "connector":"connector-name", "taskId": 0, "workerId": "kafka-connect-worker-0:8083", "trace": "the stack trace..."},
       ...
     ]
 }
