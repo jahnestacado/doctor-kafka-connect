@@ -3,9 +3,11 @@ const request = require("supertest");
 const nock = require("nock");
 const chai = require("chai");
 const expect = chai.expect;
-const healthcheckRouter = require("./../../app/routes/healthcheck.js");
+const testWorkerId = "foo-bar:3000";
 
 const attachHealthcheckRouter = () => {
+    process.env.KAFKA_CONNECT_TARGET_WORKER_IDS = testWorkerId;
+    const healthcheckRouter = require("./../../app/routes/healthcheck.js");
     const app = express();
     app.use(healthcheckRouter);
     return app;
@@ -13,10 +15,11 @@ const attachHealthcheckRouter = () => {
 
 describe("when testing the healthcheck route (integration-like tests)", () => {
     let app;
-    const testWorkerId = "foo-bar:3000";
     beforeEach(() => {
-        process.env.KAFKA_CONNECT_TARGET_WORKER_IDS = testWorkerId;
         app = attachHealthcheckRouter();
+    });
+    afterEach(() => {
+        process.env.KAFKA_CONNECT_TARGET_WORKER_IDS = undefined;
     });
 
     describe("and there is a failure in the targeted worker", () => {

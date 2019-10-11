@@ -1,4 +1,4 @@
-const extractState = require("./../../app/utils/stateExtractor.js");
+const stateExtractor = require("./../../app/utils/stateExtractor.js");
 const chai = require("chai");
 const expect = chai.expect;
 
@@ -7,7 +7,7 @@ describe("when calling the extractState function", () => {
         let state;
         const expectedState = { status: 200, failures: [] };
         beforeEach(() => {
-            state = extractState();
+            state = stateExtractor.extractState();
         });
 
         it("should return a 200 code status with no failures", () => {
@@ -21,7 +21,7 @@ describe("when calling the extractState function", () => {
         const ip = "127.0.0.1";
         const expectedState = { status: 200, failures: [] };
         beforeEach(() => {
-            state = extractState(ip, tasks, targetWorkerIds);
+            state = stateExtractor.extractState(ip, tasks, targetWorkerIds);
         });
 
         it("should return a 200 status code with no failures", () => {
@@ -42,7 +42,7 @@ describe("when calling the extractState function", () => {
             failures: [{ taskId: 2, workerId: "buzz:3333" }],
         };
         beforeEach(() => {
-            state = extractState(hostIP, tasks, targetWorkerIds);
+            state = stateExtractor.extractState(hostIP, tasks, targetWorkerIds);
         });
 
         it("should return a 503 status code with the expected failure", () => {
@@ -65,7 +65,7 @@ describe("when calling the extractState function", () => {
             ],
         };
         beforeEach(() => {
-            state = extractState(hostIP, tasks);
+            state = stateExtractor.extractState(hostIP, tasks);
         });
 
         it("should return a 503 status code with the expected failures", () => {

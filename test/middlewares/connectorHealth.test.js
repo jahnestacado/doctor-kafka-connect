@@ -1,12 +1,19 @@
 const nock = require("nock");
-const checkHealth = require("./../../app/middlewares/kafkaConnectProxy.js");
+const createConnectorHealthcheckMW = require("./../../app/middlewares/connectorHealth.js");
 const chai = require("chai");
 const expect = chai.expect;
 
-describe("when hitting the kafkaConnectProxy middleware", () => {
-    const testWorkerId = "test-worker-id:9090";
+const testWorkerId = "test-worker-id:9090";
+const drKafkaConnectConfig = {
+    hostname: "localhost",
+    port: 8083,
+    targetWorkerIds: testWorkerId,
+};
+
+describe("when hitting the connectorHealth middleware", () => {
+    let checkHealth;
     beforeEach(() => {
-        process.env.KAFKA_CONNECT_TARGET_WORKER_IDS = testWorkerId;
+        checkHealth = createConnectorHealthcheckMW(drKafkaConnectConfig);
     });
     describe("and the Kafka Connect Endpoint returns a 200 response", () => {
         const connector = "foo-0-connector";
