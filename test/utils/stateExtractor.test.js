@@ -17,7 +17,9 @@ describe("when calling the extractState function", () => {
     describe("with failing tasks in workers that are not defined in the targetWorkerIds", () => {
         let state;
         const targetWorkerIds = ["foo:8989", "bar:3333"];
-        const tasks = [{ id: 0, worker_id: "buzz:3434", state: "FAILED" }];
+        const tasks = [
+            { id: 0, worker_id: "buzz:3434", state: "FAILED", trace: "the stack trace" },
+        ];
         const ip = "127.0.0.1";
         const expectedState = { status: 200, failures: [] };
         beforeEach(() => {
@@ -32,14 +34,14 @@ describe("when calling the extractState function", () => {
         let state;
         const targetWorkerIds = ["foo:8989", "buzz:3333"];
         const tasks = [
-            { id: 0, worker_id: "buzz:3434", state: "FAILED" },
+            { id: 0, worker_id: "buzz:3434", state: "FAILED", trace: "the stack trace" },
             { id: 1, worker_id: "buzz:3333", state: "RUNNING" },
-            { id: 2, worker_id: "buzz:3333", state: "FAILED" },
+            { id: 2, worker_id: "buzz:3333", state: "FAILED", trace: "the stack trace" },
         ];
         const hostIP = "127.0.0.1";
         const expectedState = {
             status: 503,
-            failures: [{ taskId: 2, workerId: "buzz:3333" }],
+            failures: [{ taskId: 2, workerId: "buzz:3333", trace: "the stack trace..." }],
         };
         beforeEach(() => {
             state = stateExtractor.extractState(hostIP, tasks, targetWorkerIds);
@@ -53,15 +55,20 @@ describe("when calling the extractState function", () => {
         let state;
         const hostIP = "127.234.345.1";
         const tasks = [
-            { id: 0, worker_id: `${hostIP}:8900`, state: "FAILED" },
-            { id: 1, worker_id: `${hostIP}:8901`, state: "FAILED" },
-            { id: 2, worker_id: "128.222.333.12:3333", state: "FAILED" },
+            { id: 0, worker_id: `${hostIP}:8900`, state: "FAILED", trace: "the stack trace" },
+            { id: 1, worker_id: `${hostIP}:8901`, state: "FAILED", trace: "the stack trace" },
+            {
+                id: 2,
+                worker_id: "128.222.333.12:3333",
+                state: "FAILED",
+                trace: "the stack trace",
+            },
         ];
         const expectedState = {
             status: 503,
             failures: [
-                { taskId: 0, workerId: `${hostIP}:8900` },
-                { taskId: 1, workerId: `${hostIP}:8901` },
+                { taskId: 0, workerId: `${hostIP}:8900`, trace: "the stack trace..." },
+                { taskId: 1, workerId: `${hostIP}:8901`, trace: "the stack trace..." },
             ],
         };
         beforeEach(() => {

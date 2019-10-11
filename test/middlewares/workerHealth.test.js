@@ -20,8 +20,8 @@ describe("when hitting the workerHealth middleware", () => {
         const expectHealthcheckResult = {
             status: 503,
             failures: [
-                { workerId: "test-worker-id:9090", taskId: 0 },
-                { workerId: "test-worker-id:9090", taskId: 0 },
+                { workerId: "test-worker-id:9090", taskId: 0, trace: "the stack trace..." },
+                { workerId: "test-worker-id:9090", taskId: 0, trace: "the stack trace..." },
             ],
         };
 
@@ -36,8 +36,17 @@ describe("when hitting the workerHealth middleware", () => {
                     .reply(200, {
                         status: 200,
                         tasks: [
-                            { id: 0, worker_id: testWorkerId, state: "FAILED" },
-                            { id: 1, worker_id: testWorkerId, state: "RUNNING" },
+                            {
+                                id: 0,
+                                worker_id: testWorkerId,
+                                state: "FAILED",
+                                trace: "the stack trace",
+                            },
+                            {
+                                id: 1,
+                                worker_id: testWorkerId,
+                                state: "RUNNING",
+                            },
                         ],
                     });
             });
@@ -64,7 +73,12 @@ describe("when hitting the workerHealth middleware", () => {
                 .reply(200, {
                     status: 200,
                     tasks: [
-                        { id: 0, worker_id: testWorkerId, state: "FAILED" },
+                        {
+                            id: 0,
+                            worker_id: testWorkerId,
+                            state: "FAILED",
+                            trace: "the stack trace",
+                        },
                         { id: 1, worker_id: testWorkerId, state: "RUNNING" },
                     ],
                 });

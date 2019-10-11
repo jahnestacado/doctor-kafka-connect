@@ -37,7 +37,12 @@ describe("when testing the healthcheck routes (integration-like tests)", () => {
                         .reply(200, {
                             status: 200,
                             tasks: [
-                                { id: 0, worker_id: testWorkerId, state: "FAILED" },
+                                {
+                                    id: 0,
+                                    worker_id: testWorkerId,
+                                    state: "FAILED",
+                                    trace: "the stack trace",
+                                },
                                 { id: 1, worker_id: testWorkerId, state: "RUNNING" },
                             ],
                         });
@@ -50,8 +55,8 @@ describe("when testing the healthcheck routes (integration-like tests)", () => {
             });
 
             const expectedResponseBody = [
-                { workerId: testWorkerId, taskId: 0 },
-                { workerId: testWorkerId, taskId: 0 },
+                { workerId: testWorkerId, taskId: 0, trace: "the stack trace..." },
+                { workerId: testWorkerId, taskId: 0, trace: "the stack trace..." },
             ];
             it("should return a body with the expected failure message", () => {
                 expect(response.body).to.equal(`Failures: ${JSON.stringify(expectedResponseBody)}`);
@@ -71,7 +76,12 @@ describe("when testing the healthcheck routes (integration-like tests)", () => {
                         .reply(200, {
                             status: 200,
                             tasks: [
-                                { id: 0, worker_id: "another-one:3737", state: "FAILED" },
+                                {
+                                    id: 0,
+                                    worker_id: "another-one:3737",
+                                    state: "FAILED",
+                                    trace: "the stack trace",
+                                },
                                 { id: 1, worker_id: testWorkerId, state: "RUNNING" },
                             ],
                         });
@@ -99,7 +109,12 @@ describe("when testing the healthcheck routes (integration-like tests)", () => {
                     .reply(200, {
                         status: 200,
                         tasks: [
-                            { id: 0, worker_id: testWorkerId, state: "FAILED" },
+                            {
+                                id: 0,
+                                worker_id: testWorkerId,
+                                state: "FAILED",
+                                trace: "the stack trace",
+                            },
                             { id: 1, worker_id: testWorkerId, state: "RUNNING" },
                         ],
                     });
@@ -112,7 +127,9 @@ describe("when testing the healthcheck routes (integration-like tests)", () => {
 
             it("should return a body with the expected failure message", () => {
                 expect(response.body).to.equal(
-                    `Failures: ${JSON.stringify([{ workerId: testWorkerId, taskId: 0 }])}`
+                    `Failures: ${JSON.stringify([
+                        { workerId: testWorkerId, taskId: 0, trace: "the stack trace..." },
+                    ])}`
                 );
             });
         });
@@ -125,7 +142,12 @@ describe("when testing the healthcheck routes (integration-like tests)", () => {
                     .reply(200, {
                         status: 200,
                         tasks: [
-                            { id: 0, worker_id: "another-one:3737", state: "FAILED" },
+                            {
+                                id: 0,
+                                worker_id: "another-one:3737",
+                                state: "FAILED",
+                                trace: "the stack trace",
+                            },
                             { id: 1, worker_id: testWorkerId, state: "RUNNING" },
                         ],
                     });

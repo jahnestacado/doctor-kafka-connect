@@ -20,7 +20,7 @@ describe("when hitting the connectorHealth middleware", () => {
         const request = { params: { connector } };
         const expectHealthcheckResult = {
             status: 503,
-            failures: [{ workerId: "test-worker-id:9090", taskId: 0 }],
+            failures: [{ workerId: "test-worker-id:9090", taskId: 0, trace: "the stack trace..." }],
         };
         beforeEach(() => {
             nock("http://localhost:8083")
@@ -28,8 +28,17 @@ describe("when hitting the connectorHealth middleware", () => {
                 .reply(200, {
                     status: 200,
                     tasks: [
-                        { id: 0, worker_id: testWorkerId, state: "FAILED" },
-                        { id: 1, worker_id: testWorkerId, state: "RUNNING" },
+                        {
+                            id: 0,
+                            worker_id: testWorkerId,
+                            state: "FAILED",
+                            trace: "the stack trace",
+                        },
+                        {
+                            id: 1,
+                            worker_id: testWorkerId,
+                            state: "RUNNING",
+                        },
                     ],
                 });
         });

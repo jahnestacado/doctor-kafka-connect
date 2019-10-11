@@ -20,9 +20,13 @@ const Utils = {
                 return isTaskFailing;
             })
             .reduce(
-                (res, { worker_id, id }) => {
+                (res, { worker_id, id, trace }) => {
                     res.status = 503;
-                    res.failures.push({ workerId: worker_id, taskId: id });
+                    res.failures.push({
+                        workerId: worker_id,
+                        taskId: id,
+                        trace: `${trace.slice(0, 200)}...`,
+                    });
                     return res;
                 },
                 { status: 200, failures: [] }
