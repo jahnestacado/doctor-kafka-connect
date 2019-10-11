@@ -9,7 +9,7 @@ Apparently the Kafka Connect connector tasks can end up in unrecoverable state a
 ## Docker image
 
 ```
-jahnestacado/doctor-kafka-connect:1.1.0
+jahnestacado/doctor-kafka-connect:1.1.1
 ```
 
 ## Environment variables
