@@ -4,12 +4,12 @@ Doctor Kafka Connect is a healthcheck service for Kafka Connect clusters.
 
 ## Motivation
 
-Apparently the Kafka Connect connector tasks can end up in unrecoverable state and they have to be restarted manually. This behavior is not suitable for production so if we need a self healing Kafka Connect cluster we need an automated way of handling this. Moreover, the Kafka Connect REST API doesn't provide a worker specific status endpoint. You can only get an overview of the status of tasks for a specific connector in a cluster. Doctor Kafka Connect is build in order to be used as a sidecar of each Kafka Connect worker which exposes a healthcheck endpoint for assessing the health of tasks of a specific connector in that specific worker node.
+Apparently the Kafka Connect connector tasks can end up in unrecoverable state and they have to be restarted manually. This behavior is not suitable for production so if we need a self healing Kafka Connect cluster we need an automated way of handling this. Moreover, the Kafka Connect REST API doesn't provide a worker specific status endpoint. You can only get an overview of the status of tasks for a specific connector for the whole cluster. Doctor Kafka Connect is build in order to be used as a sidecar of each Kafka Connect worker which exposes two healthcheck endpoint for assessing the health of tasks of a specific connector in that specific worker node or assessing the health of all running tasks in a specific worker.
 
 ## Docker image
 
 ```
-jahnestacado/doctor-kafka-connect
+jahnestacado/doctor-kafka-connect:1.1.0
 ```
 
 ## Environment variables
@@ -59,11 +59,52 @@ The Kafka Connect Workers that we want to monitor their status. This property is
 
 ## REST API
 
-#### `GET /`
+---
 
-Get the current health status of the targeted connector that runs in the targeted Kafka Connect worker.
+### `GET /healthcheck`
+
+Get the overall health status of all the tasks that run on the targeted Kafka Connect worker.
 
 **Format**  
+`http://hostname:${HEALTHCHECK_PORT}/healthcheck`
+
+**Example Request**
+
+```bash
+curl http://localhost:18083/healthcheck
+```
+
+**Healthy Response example**
+
+Status 200
+
+```json
+{
+    "failures": []
+}
+```
+
+**Unhealthy Response example**
+
+Status 503
+
+```json
+{
+    "failures": [
+      { "connector":"connector-1", taskId": 0, "workerId": "kafka-connect-worker-0:8083", trace: "the stack trace..." },
+      { "connector":"connector-2", taskId": 3, "workerId": "kafka-connect-worker-0:8083", trace: "the stack trace..." },
+      ...
+    ]
+}
+```
+
+---
+
+### `GET /healthcheck/:connector-name`
+
+Get the current health status of all the tasks of the targeted connector that runs in the targeted Kafka Connect worker.
+
+**Format**
 `http://hostname:${HEALTHCHECK_PORT}/healthcheck/:connector-name`
 
 **Example Request**
@@ -88,9 +129,14 @@ Status 503
 
 ```json
 {
-    "failures": [{ "taskId": 0, "workerId": "kafka-connect-worker-0:8083" }]
+    "failures": [
+      { "connector":"connector-name", taskId": 0, "workerId": "kafka-connect-worker-0:8083", trace: "the stack trace..." },
+      ...
+    ]
 }
 ```
+
+---
 
 ## Kubernetes example
 
@@ -119,13 +165,13 @@ Status 503
                 protocol: TCP
             livenessProbe:
               httpGet:
-                path: /healthcheck/my-s3-connector
+                path: /healthcheck
                 port: 18083
               initialDelaySeconds: 60
               timeoutSeconds: 15
               periodSeconds: 30
           - name: "doctor-kafka-connect"
-            image: jahnestacado/doctor-kafka-connect:1.0.0
+            image: jahnestacado/doctor-kafka-connect:1.1.0
             ports:
               - { containerPort: 18083, name: "healthcheck", protocol: TCP }
             env:
@@ -145,7 +191,7 @@ services:
     ports:
       - "8083:8083"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://doctor-kafka-connect-0:18083/healthcheck/my-s3-connector"]
+      test: ["CMD", "curl", "-f", "http://doctor-kafka-connect-0:18083/healthcheck"]
       interval: 1m30s
       timeout: 10s
       retries: 3
@@ -156,7 +202,7 @@ services:
       # ...rest of Kafka Connect specific env vars
 
   doctor-kafka-connect-0:
-    image: jahnestacado/doctor-kafka-connect:1.0.0
+    image: jahnestacado/doctor-kafka-connect:1.1.0
     ports:
       - "18083:18083"
     environment:
@@ -171,7 +217,7 @@ services:
     ports:
       - "8083:8083"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://doctor-kafka-connect-1:18084/healthcheck/my-s3-connector"]
+      test: ["CMD", "curl", "-f", "http://doctor-kafka-connect-1:18084/healthcheck"]
       interval: 1m30s
       timeout: 10s
       retries: 3
@@ -182,7 +228,7 @@ services:
       # ...rest of Kafka Connect specific env vars
 
   doctor-kafka-connect-1:
-    image: jahnestacado/doctor-kafka-connect:1.0.0
+    image: jahnestacado/doctor-kafka-connect:1.1.0
     ports:
     - "18084:18084"
     environment:
