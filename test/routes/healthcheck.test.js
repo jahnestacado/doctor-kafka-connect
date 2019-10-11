@@ -55,11 +55,23 @@ describe("when testing the healthcheck routes (integration-like tests)", () => {
             });
 
             const expectedResponseBody = [
-                { workerId: testWorkerId, taskId: 0, trace: "the stack trace..." },
-                { workerId: testWorkerId, taskId: 0, trace: "the stack trace..." },
+                {
+                    connector: connectors[0],
+                    workerId: testWorkerId,
+                    taskId: 0,
+                    trace: "the stack trace...",
+                },
+                {
+                    connector: connectors[1],
+                    workerId: testWorkerId,
+                    taskId: 0,
+                    trace: "the stack trace...",
+                },
             ];
             it("should return a body with the expected failure message", () => {
-                expect(response.body).to.equal(`Failures: ${JSON.stringify(expectedResponseBody)}`);
+                expect(response.body).to.equal(
+                    `Failures: ${JSON.stringify(expectedResponseBody, 0, 2)}`
+                );
             });
         });
 
@@ -100,7 +112,7 @@ describe("when testing the healthcheck routes (integration-like tests)", () => {
     });
 
     describe("when testing the connector-specific /healthcheck/:connector route", () => {
-        describe("and there is a failure in tasksof the targeted connector in the argeted worker", () => {
+        describe("and there is a failure in tasks of the targeted connector in the targeted worker", () => {
             const connector = "test-connector-0";
             let response;
             beforeEach(async () => {
@@ -127,9 +139,18 @@ describe("when testing the healthcheck routes (integration-like tests)", () => {
 
             it("should return a body with the expected failure message", () => {
                 expect(response.body).to.equal(
-                    `Failures: ${JSON.stringify([
-                        { workerId: testWorkerId, taskId: 0, trace: "the stack trace..." },
-                    ])}`
+                    `Failures: ${JSON.stringify(
+                        [
+                            {
+                                connector,
+                                workerId: testWorkerId,
+                                taskId: 0,
+                                trace: "the stack trace...",
+                            },
+                        ],
+                        0,
+                        2
+                    )}`
                 );
             });
         });

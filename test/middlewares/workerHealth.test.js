@@ -17,11 +17,21 @@ describe("when hitting the workerHealth middleware", () => {
         checkWorkerHealth = createWorkerHealthMW(drKafkaConnectConfig);
     });
     describe("and all Kafka Connect Endpoints return a 200 response", () => {
-        const expectHealthcheckResult = {
+        const expectedHealthcheckResult = {
             status: 503,
             failures: [
-                { workerId: "test-worker-id:9090", taskId: 0, trace: "the stack trace..." },
-                { workerId: "test-worker-id:9090", taskId: 0, trace: "the stack trace..." },
+                {
+                    connector: connectors[0],
+                    workerId: "test-worker-id:9090",
+                    taskId: 0,
+                    trace: "the stack trace...",
+                },
+                {
+                    connector: connectors[1],
+                    workerId: "test-worker-id:9090",
+                    taskId: 0,
+                    trace: "the stack trace...",
+                },
             ],
         };
 
@@ -57,7 +67,7 @@ describe("when hitting the workerHealth middleware", () => {
         });
 
         it("should attach the expected healthcheck result on the request object", () => {
-            expect(request.healthcheck).to.deep.equal(expectHealthcheckResult);
+            expect(request.healthcheck).to.deep.equal(expectedHealthcheckResult);
         });
     });
     describe("and one of the Kafka Connect Endpoints returns an error", () => {

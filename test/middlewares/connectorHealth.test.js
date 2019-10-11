@@ -18,9 +18,16 @@ describe("when hitting the connectorHealth middleware", () => {
     describe("and the Kafka Connect Endpoint returns a 200 response", () => {
         const connector = "foo-0-connector";
         const request = { params: { connector } };
-        const expectHealthcheckResult = {
+        const expectedHealthcheckResult = {
             status: 503,
-            failures: [{ workerId: "test-worker-id:9090", taskId: 0, trace: "the stack trace..." }],
+            failures: [
+                {
+                    connector,
+                    workerId: "test-worker-id:9090",
+                    taskId: 0,
+                    trace: "the stack trace...",
+                },
+            ],
         };
         beforeEach(() => {
             nock("http://localhost:8083")
@@ -47,7 +54,7 @@ describe("when hitting the connectorHealth middleware", () => {
         });
 
         it("should attach the expected healthcheck result on the request object", () => {
-            expect(request.healthcheck).to.deep.equal(expectHealthcheckResult);
+            expect(request.healthcheck).to.deep.equal(expectedHealthcheckResult);
         });
     });
     describe("and the Kafka Connect Endpoint returns an error", () => {

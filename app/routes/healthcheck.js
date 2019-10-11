@@ -14,7 +14,9 @@ healthcheckRouter.get(
     createCheckWorkersHealth(drKafkaConnectConfig),
     (request, response) => {
         const { status, failures = [] } = request.healthcheck;
-        const responseMessage = failures.length ? `Failures: ${JSON.stringify(failures)}` : "OK";
+        const responseMessage = failures.length
+            ? `Failures: ${JSON.stringify(failures, 0, 2)}`
+            : "OK";
         log.info(`/healthcheck" ->  status: ${status} message: ${responseMessage}`);
         response.status(status).json(responseMessage);
     }
@@ -25,11 +27,11 @@ healthcheckRouter.get(
     createCheckConnectorsHealth(drKafkaConnectConfig),
     (request, response) => {
         const { status, failures = [] } = request.healthcheck;
-        const responseMessage = failures.length ? `Failures: ${JSON.stringify(failures)}` : "OK";
+        const responseMessage = failures.length
+            ? `Failures: ${JSON.stringify(failures, 0, 2)}`
+            : "OK";
         const connector = request.params.connector;
-        log.info(
-            `/healthcheck/:${connector}" ->  status: ${status} message: ${responseMessage}`
-        );
+        log.info(`/healthcheck/:${connector}" ->  status: ${status} message: ${responseMessage}`);
         response.status(status).json(responseMessage);
     }
 );

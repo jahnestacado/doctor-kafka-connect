@@ -4,7 +4,7 @@ const ip = require("ip");
 const localIpAddress = ip.address();
 
 const Utils = {
-    extractState(publicIpAddress = "localhost", tasks = [], targetWorkerIds = []) {
+    extractState(publicIpAddress = "localhost", connector = "", tasks = [], targetWorkerIds = []) {
         log.trace(
             `Current IP: ${publicIpAddress}, TargetWorkerIds: ${JSON.stringify(targetWorkerIds)}`
         );
@@ -23,6 +23,7 @@ const Utils = {
                 (res, { worker_id, id, trace }) => {
                     res.status = 503;
                     res.failures.push({
+                        connector,
                         workerId: worker_id,
                         taskId: id,
                         trace: `${trace.slice(0, 200)}...`,
@@ -42,7 +43,12 @@ const Utils = {
                     if (!err) {
                         const { status, body } = kafkaConnectResponse;
                         const { tasks } = body;
-                        const state = Utils.extractState(localIpAddress, tasks, targetWorkerIds);
+                        const state = Utils.extractState(
+                            localIpAddress,
+                            connector,
+                            tasks,
+                            targetWorkerIds
+                        );
                         resolve(state);
                     } else {
                         reject(err);

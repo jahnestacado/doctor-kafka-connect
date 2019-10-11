@@ -22,8 +22,9 @@ describe("when calling the extractState function", () => {
         ];
         const ip = "127.0.0.1";
         const expectedState = { status: 200, failures: [] };
+        const connector = "foo-connector";
         beforeEach(() => {
-            state = stateExtractor.extractState(ip, tasks, targetWorkerIds);
+            state = stateExtractor.extractState(ip, connector, tasks, targetWorkerIds);
         });
 
         it("should return a 200 status code with no failures", () => {
@@ -39,12 +40,15 @@ describe("when calling the extractState function", () => {
             { id: 2, worker_id: "buzz:3333", state: "FAILED", trace: "the stack trace" },
         ];
         const hostIP = "127.0.0.1";
+        const connector = "foo-connector";
         const expectedState = {
             status: 503,
-            failures: [{ taskId: 2, workerId: "buzz:3333", trace: "the stack trace..." }],
+            failures: [
+                { connector, taskId: 2, workerId: "buzz:3333", trace: "the stack trace..." },
+            ],
         };
         beforeEach(() => {
-            state = stateExtractor.extractState(hostIP, tasks, targetWorkerIds);
+            state = stateExtractor.extractState(hostIP, connector, tasks, targetWorkerIds);
         });
 
         it("should return a 503 status code with the expected failure", () => {
@@ -64,15 +68,16 @@ describe("when calling the extractState function", () => {
                 trace: "the stack trace",
             },
         ];
+        const connector = "foo-connector";
         const expectedState = {
             status: 503,
             failures: [
-                { taskId: 0, workerId: `${hostIP}:8900`, trace: "the stack trace..." },
-                { taskId: 1, workerId: `${hostIP}:8901`, trace: "the stack trace..." },
+                { connector, taskId: 0, workerId: `${hostIP}:8900`, trace: "the stack trace..." },
+                { connector, taskId: 1, workerId: `${hostIP}:8901`, trace: "the stack trace..." },
             ],
         };
         beforeEach(() => {
-            state = stateExtractor.extractState(hostIP, tasks);
+            state = stateExtractor.extractState(hostIP, connector, tasks);
         });
 
         it("should return a 503 status code with the expected failures", () => {
