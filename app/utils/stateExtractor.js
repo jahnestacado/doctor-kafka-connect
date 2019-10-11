@@ -30,10 +30,10 @@ const Utils = {
 
         return state;
     },
-    assessConnectorsHealth(connectorName, { hostname = "", port = "", targetWorkerIds = "" }) {
+    assessConnectorsHealth(connector, { hostname = "", port = "", targetWorkerIds = "" }) {
         return new Promise((resolve, reject) => {
             superagent
-                .get(`${hostname}:${port}/connectors/${connectorName}/status`)
+                .get(`${hostname}:${port}/connectors/${connector}/status`)
                 .end((err, kafkaConnectResponse) => {
                     if (!err) {
                         const { status, body } = kafkaConnectResponse;
@@ -46,10 +46,10 @@ const Utils = {
                 });
         });
     },
-    assessWorkersHealth(connectorNames = [], drKafkaConnectConfig) {
+    assessWorkersHealth(connectors = [], drKafkaConnectConfig) {
         const promises = [];
-        connectorNames.forEach((connectorName) => {
-            promises.push(Utils.assessConnectorsHealth(connectorName, drKafkaConnectConfig));
+        connectors.forEach((connector) => {
+            promises.push(Utils.assessConnectorsHealth(connector, drKafkaConnectConfig));
         });
         return Promise.all(promises);
     },

@@ -8,16 +8,17 @@ module.exports = (drKafkaConnectConfig) =>
 
         superagent.get(`${hostname}:${port}/connectors`).end((err, kafkaConnectResponse) => {
             if (!err) {
-                const { status, body: connectorNames } = kafkaConnectResponse;
+                const { status, body: connectors } = kafkaConnectResponse;
 
                 stateExtractor
-                    .assessWorkersHealth(connectorNames, drKafkaConnectConfig)
+                    .assessWorkersHealth(connectors, drKafkaConnectConfig)
                     .then((states) => {
                         request.healthcheck = states.reduce(
                             (finalState, state) => {
                                 finalState.failures = finalState.failures.concat(state.failures);
-                                finalState.status =
-                                    finalState.status === 200 && state.failures.length ? 503 : 200;
+                                if (finalState.status === 200 && state.failures.length > 0) {
+                                    finalState.status = 503;
+                                }
                                 return finalState;
                             },
                             { status: 200, failures: [] }
