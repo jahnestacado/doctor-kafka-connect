@@ -171,7 +171,7 @@ Status 503
               timeoutSeconds: 15
               periodSeconds: 30
           - name: "doctor-kafka-connect"
-            image: jahnestacado/doctor-kafka-connect:1.1.0
+            image: jahnestacado/doctor-kafka-connect:1.1.1
             ports:
               - { containerPort: 18083, name: "healthcheck", protocol: TCP }
             env:
@@ -202,7 +202,7 @@ services:
       # ...rest of Kafka Connect specific env vars
 
   doctor-kafka-connect-0:
-    image: jahnestacado/doctor-kafka-connect:1.1.0
+    image: jahnestacado/doctor-kafka-connect:1.1.1
     ports:
       - "18083:18083"
     environment:
@@ -228,7 +228,7 @@ services:
       # ...rest of Kafka Connect specific env vars
 
   doctor-kafka-connect-1:
-    image: jahnestacado/doctor-kafka-connect:1.1.0
+    image: jahnestacado/doctor-kafka-connect:1.1.1
     ports:
     - "18084:18084"
     environment:
