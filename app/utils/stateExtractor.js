@@ -16,13 +16,15 @@ const Utils = {
         const state = tasks
             .filter(({ worker_id, state, id }) => {
                 const workerHostname = worker_id.split(":")[0] || "";
-                log.debug(`Checking task {id: ${id}, worker_id: ${worker_id}, state: ${state}}`);
+                log.debug(
+                    `Checking task {connector: ${connector}, id: ${id}, worker_id: ${worker_id}, state: ${state}}`
+                );
 
-                const isTaskFailing =
+                const isTaskFailingInWorker =
                     (targetWorkerIds.includes(worker_id) || workerHostname === publicIpAddress) &&
                     state === "FAILED";
 
-                return isTaskFailing;
+                return isTaskFailingInWorker;
             })
             .reduce(
                 (res, { worker_id, id, trace }) => {
