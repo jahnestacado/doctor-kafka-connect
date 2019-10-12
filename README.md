@@ -140,7 +140,7 @@ Status 503
 
 ## Kubernetes example
 
-```
+``` yaml
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
@@ -182,7 +182,7 @@ Status 503
 
 ## Docker Swarm example
 
-```
+``` yaml
 version: "3"
 services:
 
