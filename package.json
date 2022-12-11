@@ -4,7 +4,7 @@
     "description": "A healthcheck service for Kafka Connect",
     "main": "index.js",
     "dependencies": {
-        "express": "^4.17.1",
+        "express": "^4.17.3",
         "ip": "^1.1.5",
         "loglevel": "^1.6.3",
         "superagent": "^5.1.0"
